@@ -38,14 +38,14 @@ const fields: FieldConfig<ProfileFormValues>[] = [
     type: "email",
     name: "email",
     label: "Email address",
-    startAdornment: <Mail className="h-[18px] w-[18px]" />,
+    startAdornment: <Mail className="h-4.5 w-4.5" />,
     colSpan: 6,
   },
   {
     type: "password",
     name: "password",
     label: "Password",
-    startAdornment: <Lock className="h-[18px] w-[18px]" />,
+    startAdornment: <Lock className="h-4.5 w-4.5" />,
     // helperText: "At least 8 characters, one uppercase letter and one number",
     colSpan: 6,
   },
@@ -53,7 +53,7 @@ const fields: FieldConfig<ProfileFormValues>[] = [
     type: "password",
     name: "confirmPassword",
     label: "Confirm password",
-    startAdornment: <Lock className="h-[18px] w-[18px]" />,
+    startAdornment: <Lock className="h-4.5 w-4.5" />,
     // helperText: "At least 8 characters, one uppercase letter and one number",
     colSpan: 6,
   },
@@ -91,6 +91,20 @@ const fields: FieldConfig<ProfileFormValues>[] = [
     maxFiles: 5, // ← optional cap
     colSpan: 6,
   },
+  {
+    type: "select",
+    name: "hoby",
+    label: "Hoby",
+    multiple: true,
+    searchPlaceholder: "Search hoby",
+    placeholder: "Select a hoby",
+    options: [
+      { value: "short", label: "Short" },
+      { value: "medium", label: "Medium" },
+      { value: "long", label: "Long" },
+    ],
+    colSpan: 12,
+  },
 ];
 
 export default function Home() {
@@ -110,6 +124,7 @@ console.log(submitted);
     password: "password123",
     confirmPassword: "password123",
     country: "us",
+    hoby: [],
     role: "admin",
     profilePicture: null,
     documents: null,
@@ -134,6 +149,7 @@ console.log(submitted);
             email: "",
             password: "",
             confirmPassword: "",
+            hoby: [],
             country: "",
             role: "",
             profilePicture: null,

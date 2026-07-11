@@ -47,6 +47,7 @@ export const profileSchema = z
         val.files.every((f) => f.size <= MAX_FILE_SIZE),
       { message: "File size must be less than 5MB" },
     ),
+    hoby: z.array(z.string()).min(1, "Please select at least one hoby"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",

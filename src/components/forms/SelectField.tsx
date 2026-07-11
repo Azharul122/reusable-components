@@ -1,7 +1,8 @@
+/* eslint-disable jsx-a11y/role-supports-aria-props */
 "use client";
 
 import * as React from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Check, X } from "lucide-react";
 import { cn } from "@/src/utils/cn";
 
 export interface SelectOption {
@@ -10,13 +11,22 @@ export interface SelectOption {
   disabled?: boolean;
 }
 
-export interface SelectProps {
+interface SingleSelectProps {
+  multiple?: false;
+  value?: string;
+  onChange?: (value: string) => void;
+}
+
+interface MultiSelectProps {
+  multiple: true;
+  value?: string[];
+  onChange?: (value: string[]) => void;
+}
+
+export type SelectProps = (SingleSelectProps | MultiSelectProps) & {
   /** Floating label text, mirrors MUI's `label` prop */
   label?: string;
   options: SelectOption[];
-  value?: string;
-  /** Fires with the newly selected option's value, like a native onChange */
-  onChange?: (value: string) => void;
   onBlur?: () => void;
   name?: string;
   error?: boolean;
@@ -28,7 +38,10 @@ export interface SelectProps {
   id?: string;
   /** Background the shrunk label notch is drawn on top of, defaults to bg-white */
   labelBackgroundClassName?: string;
-}
+  /** Only used when multiple is true */
+  searchPlaceholder?: string;
+  noOptionsText?: string;
+};
 
 const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
   (
@@ -47,6 +60,9 @@ const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
       placeholder,
       id,
       labelBackgroundClassName = "bg-black text-white",
+      multiple = false,
+      searchPlaceholder = "Search...",
+      noOptionsText = "No options found",
     },
     ref,
   ) => {
@@ -58,10 +74,11 @@ const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
     const [open, setOpen] = React.useState(false);
     const [focused, setFocused] = React.useState(false);
     const [highlightedIndex, setHighlightedIndex] = React.useState(-1);
+    const [searchQuery, setSearchQuery] = React.useState("");
 
     const containerRef = React.useRef<HTMLDivElement>(null);
     const buttonRef = React.useRef<HTMLButtonElement>(null);
-    const listRef = React.useRef<HTMLUListElement>(null);
+    const searchInputRef = React.useRef<HTMLInputElement>(null);
     const optionRefs = React.useRef<(HTMLLIElement | null)[]>([]);
 
     React.useImperativeHandle(
@@ -69,9 +86,35 @@ const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
       () => buttonRef.current as HTMLButtonElement,
     );
 
-    const selectedIndex = options.findIndex((o) => o.value === value);
-    const selectedOption = options[selectedIndex];
-    const shrink = focused || open || Boolean(value);
+    // Normalize value across single/multiple modes
+    const selectedValues = multiple
+      ? Array.isArray(value)
+        ? (value as string[])
+        : []
+      : [];
+    const singleValue = !multiple ? (value as string | undefined) : undefined;
+
+    const selectedIndex = !multiple
+      ? options.findIndex((o) => o.value === singleValue)
+      : -1;
+    const selectedOption = !multiple ? options[selectedIndex] : undefined;
+
+    const selectedLabels = multiple
+      ? options
+          .filter((o) => selectedValues.includes(o.value))
+          .map((o) => o.label)
+      : [];
+
+    const filteredOptions = React.useMemo(() => {
+      if (!multiple || !searchQuery.trim()) return options;
+      const q = searchQuery.toLowerCase();
+      return options.filter((o) => o.label.toLowerCase().includes(q));
+    }, [multiple, options, searchQuery]);
+
+    const shrink =
+      focused ||
+      open ||
+      (multiple ? selectedValues.length > 0 : Boolean(singleValue));
 
     // Close on outside click
     React.useEffect(() => {
@@ -97,22 +140,54 @@ const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
       }
     }, [open, highlightedIndex]);
 
+    // Autofocus the search box when a multi-select menu opens
+    React.useEffect(() => {
+      if (open && multiple) {
+        searchInputRef.current?.focus();
+      }
+    }, [open, multiple]);
+
     const openMenu = () => {
       if (disabled) return;
       setOpen(true);
-      setHighlightedIndex(selectedIndex >= 0 ? selectedIndex : 0);
+      setSearchQuery("");
+      setHighlightedIndex(multiple ? 0 : selectedIndex >= 0 ? selectedIndex : 0);
     };
 
     const closeMenu = (refocusButton = true) => {
       setOpen(false);
+      setSearchQuery("");
       if (refocusButton) buttonRef.current?.focus();
     };
 
-    const commitSelection = (index: number) => {
-      const option = options[index];
+    const toggleValue = (index: number) => {
+      const option = filteredOptions[index];
       if (!option || option.disabled) return;
-      onChange?.(option.value);
-      closeMenu();
+
+      if (multiple) {
+        const exists = selectedValues.includes(option.value);
+        const next = exists
+          ? selectedValues.filter((v) => v !== option.value)
+          : [...selectedValues, option.value];
+        (onChange as MultiSelectProps["onChange"])?.(next);
+        // keep menu open for further picks, keep focus in search box
+        searchInputRef.current?.focus();
+      } else {
+        (onChange as SingleSelectProps["onChange"])?.(option.value);
+        closeMenu();
+      }
+    };
+
+    const removeChip = (val: string, e: React.MouseEvent) => {
+      e.stopPropagation();
+      (onChange as MultiSelectProps["onChange"])?.(
+        selectedValues.filter((v) => v !== val),
+      );
+    };
+
+    const clearAll = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      (onChange as MultiSelectProps["onChange"])?.([]);
     };
 
     const handleButtonKeyDown = (e: React.KeyboardEvent) => {
@@ -131,11 +206,14 @@ const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
       }
     };
 
+    // Used by the <ul> in single-select mode (no search box to steal keys)
     const handleListKeyDown = (e: React.KeyboardEvent) => {
       switch (e.key) {
         case "ArrowDown":
           e.preventDefault();
-          setHighlightedIndex((i) => Math.min(i + 1, options.length - 1));
+          setHighlightedIndex((i) =>
+            Math.min(i + 1, filteredOptions.length - 1),
+          );
           break;
         case "ArrowUp":
           e.preventDefault();
@@ -147,12 +225,39 @@ const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
           break;
         case "End":
           e.preventDefault();
-          setHighlightedIndex(options.length - 1);
+          setHighlightedIndex(filteredOptions.length - 1);
           break;
         case "Enter":
         case " ":
           e.preventDefault();
-          commitSelection(highlightedIndex);
+          toggleValue(highlightedIndex);
+          break;
+        case "Escape":
+          e.preventDefault();
+          closeMenu();
+          break;
+        case "Tab":
+          closeMenu(false);
+          break;
+      }
+    };
+
+    // Used by the search input in multi-select mode (space must type a space)
+    const handleSearchKeyDown = (e: React.KeyboardEvent) => {
+      switch (e.key) {
+        case "ArrowDown":
+          e.preventDefault();
+          setHighlightedIndex((i) =>
+            Math.min(i + 1, filteredOptions.length - 1),
+          );
+          break;
+        case "ArrowUp":
+          e.preventDefault();
+          setHighlightedIndex((i) => Math.max(i - 1, 0));
+          break;
+        case "Enter":
+          e.preventDefault();
+          toggleValue(highlightedIndex);
           break;
         case "Escape":
           e.preventDefault();
@@ -188,7 +293,12 @@ const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
           "font-roboto relative",
         )}
       >
-        <input type="hidden" name={name} value={value ?? ""} readOnly />
+        <input
+          type="hidden"
+          name={name}
+          value={multiple ? selectedValues.join(",") : (singleValue ?? "")}
+          readOnly
+        />
 
         <button
           ref={buttonRef}
@@ -210,7 +320,7 @@ const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
           }}
           onKeyDown={handleButtonKeyDown}
           className={cn(
-            "relative flex w-full items-center justify-between rounded transition-colors duration-150",
+            "relative flex w-full min-w-0 items-center justify-between gap-2 rounded transition-colors duration-150",
             "px-3.5 text-left",
             heightClass,
             textSize,
@@ -228,17 +338,44 @@ const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
         >
           <span
             className={cn(
-              selectedOption ? "text-mui-text-primary" : "text-transparent",
+              "min-w-0 flex-1 truncate",
+              multiple
+                ? selectedLabels.length
+                  ? "text-mui-text-primary"
+                  : "text-transparent"
+                : selectedOption
+                  ? "text-mui-text-primary"
+                  : "text-transparent",
             )}
           >
-            {selectedOption ? selectedOption.label : placeholder || "\u00A0"}
+            {multiple
+              ? selectedLabels.length
+                ? selectedLabels.join(", ")
+                : placeholder || "\u00A0"
+              : selectedOption
+                ? selectedOption.label
+                : placeholder || "\u00A0"}
           </span>
-          <ChevronDown
-            className={cn(
-              "h-5 w-5 shrink-0 text-mui-text-secondary transition-transform duration-150",
-              open && "rotate-180",
+
+          <div className="flex shrink-0 items-center gap-1">
+            {multiple && selectedValues.length > 0 && !disabled && (
+              <span
+                role="button"
+                tabIndex={-1}
+                onClick={clearAll}
+                className="rounded p-0.5 text-mui-text-secondary hover:bg-mui-hoverBg"
+                aria-label="Clear all selected options"
+              >
+                <X className="h-4 w-4" />
+              </span>
             )}
-          />
+            <ChevronDown
+              className={cn(
+                "h-5 w-5 shrink-0 text-mui-text-secondary transition-transform duration-150",
+                open && "rotate-180",
+              )}
+            />
+          </div>
         </button>
 
         {label && (
@@ -259,48 +396,90 @@ const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
 
         {open && (
           <ul
-            ref={listRef}
             id={listboxId}
             role="listbox"
-            tabIndex={-1}
+            aria-multiselectable={multiple || undefined}
+            tabIndex={multiple ? undefined : -1}
             aria-activedescendant={
               highlightedIndex >= 0
                 ? `${selectId}-option-${highlightedIndex}`
                 : undefined
             }
-            onKeyDown={handleListKeyDown}
+            onKeyDown={multiple ? undefined : handleListKeyDown}
             className={cn(
-              "absolute z-9999 mt-1 max-h-60 w-full overflow-auto rounded  py-1",
+              "absolute z-9999 mt-1 w-full overflow-hidden rounded bg-inherit py-1",
               "shadow-mui outline-none",
             )}
           >
-            {options.map((option, index) => {
-              const isSelected = option.value === value;
-              const isHighlighted = index === highlightedIndex;
-              return (
-                <li
-                  key={option.value}
-                  id={`${selectId}-option-${index}`}
-                  ref={(el) => {
-                    optionRefs.current[index] = el;
+            {multiple && (
+              <li className="sticky top-0 z-10 mb-1 border-b border-mui-border bg-inherit px-2 pb-1.5">
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setHighlightedIndex(0);
                   }}
-                  role="option"
-                  aria-selected={isSelected}
-                  aria-disabled={option.disabled}
-                  onMouseEnter={() => setHighlightedIndex(index)}
-                  onClick={() => !option.disabled && commitSelection(index)}
+                  onKeyDown={handleSearchKeyDown}
+                  placeholder={searchPlaceholder}
                   className={cn(
-                    "cursor-pointer px-4 py-2 text-sm text-mui-text-primary select-none",
-                    isSelected && "bg-mui-selectedBg font-medium",
-                    isSelected && isHighlighted && "bg-mui-selectedBgHover",
-                    !isSelected && isHighlighted && "bg-mui-hoverBg",
-                    option.disabled && "cursor-not-allowed opacity-40",
+                    "mt-1.5 w-full rounded border border-mui-border bg-transparent px-2 py-1.5",
+                    "text-sm text-mui-text-primary outline-none focus:border-mui-primary",
                   )}
-                >
-                  {option.label}
+                />
+              </li>
+            )}
+
+            <div className="max-h-60 overflow-auto">
+              {filteredOptions.length === 0 ? (
+                <li className="px-4 py-2 text-sm text-mui-text-secondary select-none">
+                  {noOptionsText}
                 </li>
-              );
-            })}
+              ) : (
+                filteredOptions.map((option, index) => {
+                  const isSelected = multiple
+                    ? selectedValues.includes(option.value)
+                    : option.value === singleValue;
+                  const isHighlighted = index === highlightedIndex;
+                  return (
+                    <li
+                      key={option.value}
+                      id={`${selectId}-option-${index}`}
+                      ref={(el) => {
+                        optionRefs.current[index] = el;
+                      }}
+                      role="option"
+                      aria-selected={isSelected}
+                      aria-disabled={option.disabled}
+                      onMouseEnter={() => setHighlightedIndex(index)}
+                      onClick={() => !option.disabled && toggleValue(index)}
+                      className={cn(
+                        "flex cursor-pointer items-center gap-2 px-4 py-2 text-sm text-mui-text-primary select-none",
+                        isSelected && "bg-mui-selectedBg font-medium",
+                        isSelected && isHighlighted && "bg-mui-selectedBgHover",
+                        !isSelected && isHighlighted && "bg-mui-hoverBg",
+                        option.disabled && "cursor-not-allowed opacity-40",
+                      )}
+                    >
+                      {multiple && (
+                        <span
+                          className={cn(
+                            "flex h-4 w-4 shrink-0 items-center justify-center rounded-sm border",
+                            isSelected
+                              ? "border-mui-primary bg-mui-primary text-white"
+                              : "border-mui-border",
+                          )}
+                        >
+                          {isSelected && <Check className="h-3 w-3" />}
+                        </span>
+                      )}
+                      <span className="truncate">{option.label}</span>
+                    </li>
+                  );
+                })
+              )}
+            </div>
           </ul>
         )}
 

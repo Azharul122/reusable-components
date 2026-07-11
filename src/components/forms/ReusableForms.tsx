@@ -39,6 +39,8 @@ type SelectFieldConfig<TFieldValues extends FieldValues> =
     type: "select";
     options: SelectOption[];
     placeholder?: string;
+    multiple?: boolean;
+    searchPlaceholder?: string;
   };
 
 export type FieldConfig<TFieldValues extends FieldValues> =
@@ -125,6 +127,8 @@ export default function ReusableForm<TFieldValues extends FieldValues>({
                   <Select
                     label={field.label}
                     options={field.options}
+                    multiple={field.multiple}
+                    searchPlaceholder={field.searchPlaceholder}
                     value={rhfField.value}
                     onChange={rhfField.onChange}
                     onBlur={rhfField.onBlur}
