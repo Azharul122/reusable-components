@@ -24,7 +24,10 @@ export const profileSchema = z
       .string()
       .min(1, "Full name is required")
       .min(2, "Full name must be at least 2 characters"),
-    email: z.string().min(1, "Email is required").email("Enter a valid email address"),
+    email: z
+      .string()
+      .min(1, "Email is required")
+      .email("Enter a valid email address"),
     password: z
       .string()
       .min(8, "Password must be at least 8 characters")
@@ -35,16 +38,20 @@ export const profileSchema = z
     role: z.string().min(1, "Please select a role"),
 
     profilePicture: fileUploadValue.refine(
-      (val) =>
-        !val ||
-        val.files.every((f) => f.size <= MAX_FILE_SIZE),
+      (val) => !val || val.files.every((f) => f.size <= MAX_FILE_SIZE),
       { message: "File size must be less than 5MB" },
     ),
 
+    // Single required checkbox, e.g. "I agree to the terms"
+    agreeToTerms: z.boolean().refine((v) => v === true, {
+      message: "You must accept the terms to continue",
+    }),
+
+    // Checkbox group, at least one required
+    interests: z.array(z.string()).min(1, "Select at least one option"),
+
     documents: fileUploadValue.refine(
-      (val) =>
-        !val ||
-        val.files.every((f) => f.size <= MAX_FILE_SIZE),
+      (val) => !val || val.files.every((f) => f.size <= MAX_FILE_SIZE),
       { message: "File size must be less than 5MB" },
     ),
     hoby: z.array(z.string()).min(1, "Please select at least one hoby"),

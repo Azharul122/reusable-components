@@ -17,6 +17,7 @@ import TextField from "./InputFields";
 import { cn } from "@/src/utils/cn";
 import Select, { SelectOption } from "./SelectField";
 import FileUploader, { ExistingFileValue } from "./FileUpload";
+import { Checkbox, CheckboxGroup, CheckboxOption } from "./CheckboxField";
 
 type BaseFieldConfig<TFieldValues extends FieldValues> = {
   name: Path<TFieldValues>;
@@ -34,6 +35,19 @@ type TextFieldConfig<TFieldValues extends FieldValues> =
     endAdornment?: React.ReactNode;
   };
 
+type CheckboxFieldConfig<TFieldValues extends FieldValues> =
+  BaseFieldConfig<TFieldValues> & {
+    type: "checkbox";
+  };
+
+type CheckboxGroupFieldConfig<TFieldValues extends FieldValues> =
+  BaseFieldConfig<TFieldValues> & {
+    type: "checkbox-group";
+    options: CheckboxOption[];
+    direction?: "row" | "column";
+    selectAll?: boolean;
+  };
+
 type SelectFieldConfig<TFieldValues extends FieldValues> =
   BaseFieldConfig<TFieldValues> & {
     type: "select";
@@ -46,7 +60,9 @@ type SelectFieldConfig<TFieldValues extends FieldValues> =
 export type FieldConfig<TFieldValues extends FieldValues> =
   | TextFieldConfig<TFieldValues>
   | SelectFieldConfig<TFieldValues>
-  | FileFieldConfig<TFieldValues>;
+  | FileFieldConfig<TFieldValues>
+  | CheckboxFieldConfig<TFieldValues>
+  | CheckboxGroupFieldConfig<TFieldValues>;
 
 export interface ReusableFormProps<TFieldValues extends FieldValues> {
   schema: ZodType<TFieldValues, TFieldValues>;
@@ -157,6 +173,39 @@ export default function ReusableForm<TFieldValues extends FieldValues>({
                     error={Boolean(fieldError)}
                     helperText={errorMessage ?? field.helperText}
                     fullWidth={field.fullWidth ?? true}
+                  />
+                )}
+              />
+            ) : field.type === "checkbox" ? (
+              <Controller
+                name={field.name}
+                control={control}
+                render={({ field: rhfField }) => (
+                  <Checkbox
+                    label={field.label}
+                    checked={rhfField.value}
+                    onChange={rhfField.onChange}
+                    onBlur={rhfField.onBlur}
+                    error={Boolean(fieldError)}
+                    helperText={errorMessage ?? field.helperText}
+                  />
+                )}
+              />
+            ) : field.type === "checkbox-group" ? (
+              <Controller
+                name={field.name}
+                control={control}
+                render={({ field: rhfField }) => (
+                  <CheckboxGroup
+                    label={field.label}
+                    options={field.options}
+                    direction={field.direction}
+                    selectAll={field.selectAll}
+                    value={rhfField.value}
+                    onChange={rhfField.onChange}
+                    onBlur={rhfField.onBlur}
+                    error={Boolean(fieldError)}
+                    helperText={errorMessage ?? field.helperText}
                   />
                 )}
               />

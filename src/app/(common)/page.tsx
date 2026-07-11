@@ -105,6 +105,22 @@ const fields: FieldConfig<ProfileFormValues>[] = [
     ],
     colSpan: 12,
   },
+  {
+    type: "checkbox",
+    name: "agreeToTerms",
+    label: "Accept terms and conditions",
+    colSpan: 12,
+  },{
+    type: "checkbox-group",
+    name: "interests",
+    label: "Select interests",
+    options: [
+      { value: "short", label: "Short" },
+      { value: "medium", label: "Medium" },
+      { value: "long", label: "Long" },
+    ],
+    colSpan: 12,
+  }
 ];
 
 export default function Home() {
@@ -128,6 +144,8 @@ console.log(submitted);
     role: "admin",
     profilePicture: null,
     documents: null,
+    agreeToTerms: false,
+    interests: [],
   };
 
   return (
@@ -154,6 +172,8 @@ console.log(submitted);
             role: "",
             profilePicture: null,
             documents: null,
+            agreeToTerms: false,
+            interests: [],
           }}
           values={profileInitialValues}
           submitLabel="Create account"
