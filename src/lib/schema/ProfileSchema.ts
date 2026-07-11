@@ -60,6 +60,11 @@ export const profileSchema = z
       message: "Please select an option",
     }),
 
+    maxPrice: z.number().min(0, "Price must be at least 0").max(10000, "Price must be less than 10000"),
+    priceRange: z.tuple([z.number().min(0, "Price must be at least 0").max(10000, "Price must be less than 10000"), z.number().min(0, "Price must be at least 0").max(10000, "Price must be less than 10000")]).refine(([min, max]) => min <= max, {
+      message: "Minimum price must be less than or equal to maximum price",
+    }),
+
     // Checkbox group, at least one required
     interests: z.array(z.string()).min(1, "Select at least one option"),
 

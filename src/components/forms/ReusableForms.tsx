@@ -21,6 +21,7 @@ import { Checkbox, CheckboxGroup, CheckboxOption } from "./CheckboxField";
 import { RadioGroup, RadioOption } from "./RadioField";
 import DateField, { DateValue } from "./DateField";
 import { Switch, SwitchGroup, SwitchOption } from "./Switch";
+import { Slider } from "./Slider";
 
 type BaseFieldConfig<TFieldValues extends FieldValues> = {
   name: Path<TFieldValues>;
@@ -89,6 +90,17 @@ type DateFieldConfig<TFieldValues extends FieldValues> =
     maxDate?: DateValue;
   };
 
+type SliderFieldConfig<TFieldValues extends FieldValues> =
+  BaseFieldConfig<TFieldValues> & {
+    type: "slider";
+    range?: boolean; // false/omitted = single value, true = [min, max]
+    min?: number;
+    max?: number;
+    step?: number;
+    formatValue?: (value: number) => string; // e.g. (v) => `$${v}`
+    showValue?: boolean;
+  };
+
 export type FieldConfig<TFieldValues extends FieldValues> =
   | TextFieldConfig<TFieldValues>
   | SelectFieldConfig<TFieldValues>
@@ -98,7 +110,8 @@ export type FieldConfig<TFieldValues extends FieldValues> =
   | SwitchFieldConfig<TFieldValues>
   | SwitchGroupFieldConfig<TFieldValues>
   | RadioFieldConfig<TFieldValues>
-  | DateFieldConfig<TFieldValues>;
+  | DateFieldConfig<TFieldValues>
+  | SliderFieldConfig<TFieldValues>;
 
 export interface ReusableFormProps<TFieldValues extends FieldValues> {
   schema: ZodType<TFieldValues, TFieldValues>;
@@ -253,6 +266,31 @@ export default function ReusableForm<TFieldValues extends FieldValues>({
                   <Switch
                     label={field.label}
                     checked={rhfField.value}
+                    onChange={rhfField.onChange}
+                    onBlur={rhfField.onBlur}
+                    name={rhfField.name}
+                    error={Boolean(fieldError)}
+                    helperText={errorMessage ?? field.helperText}
+                    fullWidth={field.fullWidth ?? true}
+                  />
+                )}
+              />
+            ) : field.type === "slider" ? (
+              <Controller
+                name={field.name}
+                control={control}
+                render={({ field: rhfField }) => (
+                  <Slider
+                    label={field.label}
+                    // cast needed because the generic FieldConfig can't tie
+                    // `range` to the value's shape at this layer
+                    {...({ range: field.range } as { range?: boolean })}
+                    min={field.min}
+                    max={field.max}
+                    step={field.step}
+                    formatValue={field.formatValue}
+                    showValue={field.showValue}
+                    value={rhfField.value}
                     onChange={rhfField.onChange}
                     onBlur={rhfField.onBlur}
                     name={rhfField.name}

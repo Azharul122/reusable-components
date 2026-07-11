@@ -177,6 +177,29 @@ const fields: FieldConfig<ProfileFormValues>[] = [
     ],
     colSpan: 12,
   },
+
+  {
+    type: "slider",
+    name: "maxPrice", // number field
+    label: "Maximum price",
+    min: 0,
+    max: 1000,
+    step: 10,
+    formatValue: (v) => `$${v}`,
+    colSpan: 12,
+  },
+
+  {
+    type: "slider",
+    name: "priceRange", // [number, number] field
+    label: "Price range",
+    range: true,
+    min: 0,
+    max: 1000,
+    step: 10,
+    formatValue: (v) => `$${v}`,
+    colSpan: 12,
+  },
 ];
 
 export default function Home() {
@@ -208,6 +231,8 @@ export default function Home() {
       bookingDates: [],
       agreeTerms: false,
       interest: [],
+      maxPrice: 0,
+      priceRange: [0, 0],
     }),
     [], // recompute only when the real source data changes
   );
