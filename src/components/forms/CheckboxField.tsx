@@ -65,7 +65,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
     const boxColor = error
       ? "border-mui-error"
       : checked || indeterminate
-        ? "border-mui-primary bg-primary"
+        ? "border-primary "
         : "border-mui-border";
 
     return (
@@ -109,7 +109,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
               {indeterminate ? (
                 <Minus className={cn(iconSize, "text-white")} />
               ) : checked ? (
-                <Check className={cn(iconSize, "text-white")} />
+                <Check className={cn(iconSize, "text-primary")} />
               ) : null}
             </span>
           </span>
@@ -118,7 +118,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
             <span
               className={cn(
                 textSize,
-                error ? "text-error" : "text-mui-text-primary",
+                error ? "text-error" : "text-primary-text",
               )}
             >
               {label}

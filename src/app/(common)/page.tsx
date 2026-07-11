@@ -10,6 +10,7 @@ import {
 import ReusableForm, {
   FieldConfig,
 } from "@/src/components/forms/ReusableForms";
+import { DateValue } from "@/src/components/forms/DateField";
 
 const countryOptions = [
   { value: "us", label: "United States" },
@@ -25,6 +26,13 @@ const roleOptions = [
   { value: "editor", label: "Editor" },
   { value: "viewer", label: "Viewer" },
   { value: "billing", label: "Billing only", disabled: true },
+];
+
+const bookedDates: DateValue[] = [
+  "2026-07-15",
+  "2026-07-16",
+  "2026-07-20",
+  "2026-08-01",
 ];
 
 const fields: FieldConfig<ProfileFormValues>[] = [
@@ -133,6 +141,42 @@ const fields: FieldConfig<ProfileFormValues>[] = [
     ],
     colSpan: 12,
   },
+  {
+    type: "date",
+    name: "bookingDate",
+    label: "Select date",
+    colSpan: 12,
+  },
+  {
+    type: "date",
+    name: "bookingDates",
+    label: "Select multiple dates",
+    multiple: true,
+    colSpan: 12,
+    bookedDates: bookedDates,
+    disablePast: true,
+  },
+  // Example additions to page.tsx's `fields` array
+
+  {
+    type: "switch",
+    name: "agreeTerms", // boolean field, same shape as the checkbox version
+    label: "Accept terms and conditions",
+    colSpan: 12,
+  },
+
+  {
+    type: "switch-group",
+    name: "interest", // string[] field, same shape as checkbox-group
+    label: "Notification preferences",
+    direction: "column",
+    options: [
+      { value: "email", label: "Email notifications" },
+      { value: "sms", label: "SMS notifications" },
+      { value: "push", label: "Push notifications" },
+    ],
+    colSpan: 12,
+  },
 ];
 
 export default function Home() {
@@ -160,13 +204,17 @@ export default function Home() {
       agreeToTerms: false,
       interests: [],
       gender: "male",
+      bookingDate: "",
+      bookingDates: [],
+      agreeTerms: false,
+      interest: [],
     }),
     [], // recompute only when the real source data changes
   );
 
   return (
     <main className="mx-auto flex min-h-screen max-w-2xl flex-col justify-center px-6 py-16">
-      <h1 className="mb-1 text-2xl font-medium text-mui-text-primary">
+      <h1 className="mb-1 text-2xl font-medium text-primary-text">
         Create profile
       </h1>
       <p className="mb-8 text-sm text-mui-text-secondary">

@@ -42,10 +42,19 @@ export const profileSchema = z
       { message: "File size must be less than 5MB" },
     ),
 
+    bookingDate: z.string().min(1, "Please select a date"),
+    // or for multiple:
+    bookingDates: z.array(z.string()).min(1, "Select at least one date"),
+
     // Single required checkbox, e.g. "I agree to the terms"
     agreeToTerms: z.boolean().refine((v) => v === true, {
       message: "You must accept the terms to continue",
     }),
+    agreeTerms: z.boolean().refine((v) => v === true, {
+      message: "You must accept the terms to continue",
+    }),
+
+    interest: z.array(z.string()).min(1, "Select at least one interest"),
 
     gender: z.enum(["male", "female", "other"], {
       message: "Please select an option",

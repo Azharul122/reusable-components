@@ -151,7 +151,9 @@ const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
       if (disabled) return;
       setOpen(true);
       setSearchQuery("");
-      setHighlightedIndex(multiple ? 0 : selectedIndex >= 0 ? selectedIndex : 0);
+      setHighlightedIndex(
+        multiple ? 0 : selectedIndex >= 0 ? selectedIndex : 0,
+      );
     };
 
     const closeMenu = (refocusButton = true) => {
@@ -341,10 +343,10 @@ const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
               "min-w-0 flex-1 truncate",
               multiple
                 ? selectedLabels.length
-                  ? "text-mui-text-primary"
+                  ? "text-primary-text"
                   : "text-transparent"
                 : selectedOption
-                  ? "text-mui-text-primary"
+                  ? "text-primary-text"
                   : "text-transparent",
             )}
           >
@@ -407,12 +409,12 @@ const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
             }
             onKeyDown={multiple ? undefined : handleListKeyDown}
             className={cn(
-              "absolute z-9999 mt-1 w-full overflow-hidden rounded bg-inherit py-1",
+              "absolute z-9999 mt-1 w-full overflow-hidden rounded py-1 bg-black",
               "shadow-mui outline-none",
             )}
           >
             {multiple && (
-              <li className="sticky top-0 z-10 mb-1 border-b border-mui-border bg-inherit px-2 pb-1.5">
+              <li className="sticky top-0 z-10 mb-1  border-mui-border bg-inherit px-1.5 pb-1.5">
                 <input
                   ref={searchInputRef}
                   type="text"
@@ -425,7 +427,7 @@ const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
                   placeholder={searchPlaceholder}
                   className={cn(
                     "mt-1.5 w-full rounded border border-mui-border bg-transparent px-2 py-1.5",
-                    "text-sm text-mui-text-primary outline-none focus:border-mui-primary",
+                    "text-sm text-primary-text outline-none focus:border-mui-primary",
                   )}
                 />
               </li>
@@ -433,7 +435,7 @@ const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
 
             <div className="max-h-60 overflow-auto">
               {filteredOptions.length === 0 ? (
-                <li className="px-4 py-2 text-sm text-mui-text-secondary select-none">
+                <li className=" py-2 text-sm text-mui-text-secondary select-none">
                   {noOptionsText}
                 </li>
               ) : (
@@ -455,7 +457,7 @@ const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
                       onMouseEnter={() => setHighlightedIndex(index)}
                       onClick={() => !option.disabled && toggleValue(index)}
                       className={cn(
-                        "flex cursor-pointer items-center gap-2 px-4 py-2 text-sm text-mui-text-primary select-none",
+                        "flex cursor-pointer items-center gap-2 px-2 py-2 text-sm text-primary-text select-none",
                         isSelected && "bg-mui-selectedBg font-medium",
                         isSelected && isHighlighted && "bg-mui-selectedBgHover",
                         !isSelected && isHighlighted && "bg-mui-hoverBg",

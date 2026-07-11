@@ -164,7 +164,7 @@ const TextField = React.forwardRef<HTMLInputElement, TextFieldProps>(
         aria-pressed={passwordVisible}
         className={cn(
           "flex items-center text-mui-text-secondary transition-colors",
-          disabled ? "cursor-not-allowed" : "cursor-pointer hover:text-mui-text-primary",
+          disabled ? "cursor-not-allowed" : "cursor-pointer hover:text-primary-text",
         )}
       >
         {passwordVisible ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -220,7 +220,7 @@ const TextField = React.forwardRef<HTMLInputElement, TextFieldProps>(
               "px-3.5",
               inputPadding,
               inputTextSize,
-              "text-mui-text-primary placeholder:text-transparent",
+              "text-primary-text placeholder:text-transparent",
               "disabled:cursor-not-allowed disabled:text-mui-text-disabled",
               startAdornment && "pl-1",
               resolvedEndAdornment && "pr-1",

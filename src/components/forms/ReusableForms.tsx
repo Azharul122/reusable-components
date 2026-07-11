@@ -19,6 +19,8 @@ import Select, { SelectOption } from "./SelectField";
 import FileUploader, { ExistingFileValue } from "./FileUpload";
 import { Checkbox, CheckboxGroup, CheckboxOption } from "./CheckboxField";
 import { RadioGroup, RadioOption } from "./RadioField";
+import DateField, { DateValue } from "./DateField";
+import { Switch, SwitchGroup, SwitchOption } from "./Switch";
 
 type BaseFieldConfig<TFieldValues extends FieldValues> = {
   name: Path<TFieldValues>;
@@ -56,6 +58,18 @@ type CheckboxGroupFieldConfig<TFieldValues extends FieldValues> =
     selectAll?: boolean;
   };
 
+type SwitchFieldConfig<TFieldValues extends FieldValues> =
+  BaseFieldConfig<TFieldValues> & {
+    type: "switch";
+  };
+
+type SwitchGroupFieldConfig<TFieldValues extends FieldValues> =
+  BaseFieldConfig<TFieldValues> & {
+    type: "switch-group";
+    options: SwitchOption[];
+    direction?: "row" | "column";
+  };
+
 type SelectFieldConfig<TFieldValues extends FieldValues> =
   BaseFieldConfig<TFieldValues> & {
     type: "select";
@@ -65,13 +79,26 @@ type SelectFieldConfig<TFieldValues extends FieldValues> =
     searchPlaceholder?: string;
   };
 
+type DateFieldConfig<TFieldValues extends FieldValues> =
+  BaseFieldConfig<TFieldValues> & {
+    type: "date";
+    multiple?: boolean;
+    bookedDates?: DateValue[];
+    disablePast?: boolean;
+    minDate?: DateValue;
+    maxDate?: DateValue;
+  };
+
 export type FieldConfig<TFieldValues extends FieldValues> =
   | TextFieldConfig<TFieldValues>
   | SelectFieldConfig<TFieldValues>
   | FileFieldConfig<TFieldValues>
   | CheckboxFieldConfig<TFieldValues>
   | CheckboxGroupFieldConfig<TFieldValues>
-  | RadioFieldConfig<TFieldValues>;
+  | SwitchFieldConfig<TFieldValues>
+  | SwitchGroupFieldConfig<TFieldValues>
+  | RadioFieldConfig<TFieldValues>
+  | DateFieldConfig<TFieldValues>;
 
 export interface ReusableFormProps<TFieldValues extends FieldValues> {
   schema: ZodType<TFieldValues, TFieldValues>;
@@ -218,6 +245,41 @@ export default function ReusableForm<TFieldValues extends FieldValues>({
                   />
                 )}
               />
+            ) : field.type === "switch" ? (
+              <Controller
+                name={field.name}
+                control={control}
+                render={({ field: rhfField }) => (
+                  <Switch
+                    label={field.label}
+                    checked={rhfField.value}
+                    onChange={rhfField.onChange}
+                    onBlur={rhfField.onBlur}
+                    name={rhfField.name}
+                    error={Boolean(fieldError)}
+                    helperText={errorMessage ?? field.helperText}
+                    fullWidth={field.fullWidth ?? true}
+                  />
+                )}
+              />
+            ) : field.type === "switch-group" ? (
+              <Controller
+                name={field.name}
+                control={control}
+                render={({ field: rhfField }) => (
+                  <SwitchGroup
+                    label={field.label}
+                    options={field.options}
+                    direction={field.direction}
+                    value={rhfField.value}
+                    onChange={rhfField.onChange}
+                    onBlur={rhfField.onBlur}
+                    error={Boolean(fieldError)}
+                    helperText={errorMessage ?? field.helperText}
+                    fullWidth={field.fullWidth ?? true}
+                  />
+                )}
+              />
             ) : field.type === "radio" ? (
               <Controller
                 name={field.name}
@@ -233,6 +295,28 @@ export default function ReusableForm<TFieldValues extends FieldValues>({
                     direction={field.direction}
                     error={Boolean(fieldError)}
                     helperText={errorMessage ?? field.helperText}
+                  />
+                )}
+              />
+            ) : field.type === "date" ? (
+              <Controller
+                name={field.name}
+                control={control}
+                render={({ field: rhfField }) => (
+                  <DateField
+                    label={field.label}
+                    multiple={field.multiple}
+                    bookedDates={field.bookedDates}
+                    disablePast={field.disablePast}
+                    minDate={field.minDate}
+                    maxDate={field.maxDate}
+                    value={rhfField.value}
+                    onChange={rhfField.onChange}
+                    onBlur={rhfField.onBlur}
+                    name={rhfField.name}
+                    error={Boolean(fieldError)}
+                    helperText={errorMessage ?? field.helperText}
+                    fullWidth={field.fullWidth ?? true}
                   />
                 )}
               />
