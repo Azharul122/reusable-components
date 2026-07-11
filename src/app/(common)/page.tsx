@@ -110,7 +110,8 @@ const fields: FieldConfig<ProfileFormValues>[] = [
     name: "agreeToTerms",
     label: "Accept terms and conditions",
     colSpan: 12,
-  },{
+  },
+  {
     type: "checkbox-group",
     name: "interests",
     label: "Select interests",
@@ -120,7 +121,18 @@ const fields: FieldConfig<ProfileFormValues>[] = [
       { value: "long", label: "Long" },
     ],
     colSpan: 12,
-  }
+  },
+  {
+    type: "radio",
+    name: "gender",
+    label: "Select gender",
+    options: [
+      { value: "male", label: "Male" },
+      { value: "female", label: "Female" },
+      { value: "other", label: "Other" },
+    ],
+    colSpan: 12,
+  },
 ];
 
 export default function Home() {
@@ -132,21 +144,25 @@ export default function Home() {
     setSubmitted(data);
   };
 
-console.log(submitted);
+  console.log(submitted);
 
-  const profileInitialValues = {
-    fullName: "John Doe",
-    email: "RtK6R@example.com",
-    password: "password123",
-    confirmPassword: "password123",
-    country: "us",
-    hoby: [],
-    role: "admin",
-    profilePicture: null,
-    documents: null,
-    agreeToTerms: false,
-    interests: [],
-  };
+  const profileInitialValues = React.useMemo<ProfileFormValues>(
+    () => ({
+      fullName: "John Doe",
+      email: "RtK6R@example.com",
+      password: "password123",
+      confirmPassword: "password123",
+      country: "us",
+      hoby: [],
+      role: "admin",
+      profilePicture: null,
+      documents: null,
+      agreeToTerms: false,
+      interests: [],
+      gender: "male",
+    }),
+    [], // recompute only when the real source data changes
+  );
 
   return (
     <main className="mx-auto flex min-h-screen max-w-2xl flex-col justify-center px-6 py-16">
@@ -162,20 +178,7 @@ console.log(submitted);
         <ReusableForm
           schema={profileSchema}
           fields={fields}
-          defaultValues={{
-            fullName: "",
-            email: "",
-            password: "",
-            confirmPassword: "",
-            hoby: [],
-            country: "",
-            role: "",
-            profilePicture: null,
-            documents: null,
-            agreeToTerms: false,
-            interests: [],
-          }}
-          values={profileInitialValues}
+          defaultValues={profileInitialValues}
           submitLabel="Create account"
           onSubmit={onSubmit}
         />

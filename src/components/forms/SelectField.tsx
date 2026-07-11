@@ -280,7 +280,7 @@ const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
     const borderWidth = focused || open || error ? "border-2" : "border";
 
     const labelColor = error
-      ? "text-red-600"
+      ? "text-error"
       : focused || open
         ? "text-mui-primary"
         : "text-mui-text-secondary";
@@ -467,7 +467,7 @@ const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
                           className={cn(
                             "flex h-4 w-4 shrink-0 items-center justify-center rounded-sm border",
                             isSelected
-                              ? "border-mui-primary bg-mui-primary text-white"
+                              ? "border-mui-primary bg-primary text-white"
                               : "border-mui-border",
                           )}
                         >
@@ -488,7 +488,7 @@ const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
             id={helperId}
             className={cn(
               "mt-1 px-3.5 text-xs leading-tight",
-              error ? "text-red-600" : "text-mui-text-secondary",
+              error ? "text-error" : "text-mui-text-secondary",
             )}
           >
             {helperText}

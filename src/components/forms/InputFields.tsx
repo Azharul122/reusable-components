@@ -140,7 +140,7 @@ const TextField = React.forwardRef<HTMLInputElement, TextFieldProps>(
     const borderWidth = focused || showError ? "border-2" : "border";
 
     const labelColor = showError
-      ? "text-red-600"
+      ? "text-error"
       : focused
         ? "text-mui-primary"
         : "text-mui-text-secondary";
@@ -261,7 +261,7 @@ const TextField = React.forwardRef<HTMLInputElement, TextFieldProps>(
             id={helperId}
             className={cn(
               "mt-1 px-3.5 text-xs leading-tight",
-              showError ? "text-red-600" : "text-mui-text-secondary",
+              showError ? "text-error" : "text-mui-text-secondary",
             )}
           >
             {helperText}

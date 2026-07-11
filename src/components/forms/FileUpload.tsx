@@ -324,7 +324,7 @@ const FileUploader = React.forwardRef<HTMLInputElement, FileUploaderProps>(
       isDragging || isFocused || error || errorMsg ? "border-2" : "border";
     const labelColor =
       error || errorMsg
-        ? "text-red-600"
+        ? "text-error"
         : isDragging || isFocused
           ? "text-mui-primary"
           : "text-mui-text-secondary";
@@ -369,7 +369,7 @@ const FileUploader = React.forwardRef<HTMLInputElement, FileUploaderProps>(
                   "cursor-pointer",
                   !isDragging && !isFocused && "hover:border-mui-borderHover",
                 ),
-            isDragging && "bg-mui-primary/5",
+            isDragging && "bg-primary/5",
             className,
           )}
         >
@@ -496,7 +496,7 @@ const FileUploader = React.forwardRef<HTMLInputElement, FileUploaderProps>(
             id={helperId}
             className={cn(
               "mt-1 px-1 text-xs leading-tight",
-              error || errorMsg ? "text-red-600" : "text-mui-text-secondary",
+              error || errorMsg ? "text-error" : "text-mui-text-secondary",
             )}
           >
             {errorMsg ?? helperText}

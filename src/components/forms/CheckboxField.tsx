@@ -65,7 +65,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
     const boxColor = error
       ? "border-mui-error"
       : checked || indeterminate
-        ? "border-mui-primary bg-mui-primary"
+        ? "border-mui-primary bg-primary"
         : "border-mui-border";
 
     return (
@@ -118,7 +118,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
             <span
               className={cn(
                 textSize,
-                error ? "text-red-600" : "text-mui-text-primary",
+                error ? "text-error" : "text-mui-text-primary",
               )}
             >
               {label}
@@ -131,7 +131,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
             id={helperId}
             className={cn(
               "mt-1 text-xs leading-tight",
-              error ? "text-red-600" : "text-mui-text-secondary",
+              error ? "text-error" : "text-mui-text-secondary",
             )}
           >
             {helperText}
@@ -229,7 +229,7 @@ export const CheckboxGroup = React.forwardRef<HTMLDivElement, CheckboxGroupProps
             id={`${groupId}-label`}
             className={cn(
               "mb-1.5 text-sm font-medium",
-              error ? "text-red-600" : "text-mui-text-secondary",
+              error ? "text-error" : "text-mui-text-secondary",
             )}
           >
             {label}
@@ -274,7 +274,7 @@ export const CheckboxGroup = React.forwardRef<HTMLDivElement, CheckboxGroupProps
             id={helperId}
             className={cn(
               "mt-1 text-xs leading-tight",
-              error ? "text-red-600" : "text-mui-text-secondary",
+              error ? "text-error" : "text-mui-text-secondary",
             )}
           >
             {helperText}

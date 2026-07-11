@@ -18,6 +18,7 @@ import { cn } from "@/src/utils/cn";
 import Select, { SelectOption } from "./SelectField";
 import FileUploader, { ExistingFileValue } from "./FileUpload";
 import { Checkbox, CheckboxGroup, CheckboxOption } from "./CheckboxField";
+import { RadioGroup, RadioOption } from "./RadioField";
 
 type BaseFieldConfig<TFieldValues extends FieldValues> = {
   name: Path<TFieldValues>;
@@ -33,6 +34,13 @@ type TextFieldConfig<TFieldValues extends FieldValues> =
     placeholder?: string;
     startAdornment?: React.ReactNode;
     endAdornment?: React.ReactNode;
+  };
+
+type RadioFieldConfig<TFieldValues extends FieldValues> =
+  BaseFieldConfig<TFieldValues> & {
+    type: "radio";
+    options: RadioOption[];
+    direction?: "row" | "column";
   };
 
 type CheckboxFieldConfig<TFieldValues extends FieldValues> =
@@ -62,7 +70,8 @@ export type FieldConfig<TFieldValues extends FieldValues> =
   | SelectFieldConfig<TFieldValues>
   | FileFieldConfig<TFieldValues>
   | CheckboxFieldConfig<TFieldValues>
-  | CheckboxGroupFieldConfig<TFieldValues>;
+  | CheckboxGroupFieldConfig<TFieldValues>
+  | RadioFieldConfig<TFieldValues>;
 
 export interface ReusableFormProps<TFieldValues extends FieldValues> {
   schema: ZodType<TFieldValues, TFieldValues>;
@@ -209,6 +218,24 @@ export default function ReusableForm<TFieldValues extends FieldValues>({
                   />
                 )}
               />
+            ) : field.type === "radio" ? (
+              <Controller
+                name={field.name}
+                control={control}
+                render={({ field: rhfField }) => (
+                  <RadioGroup
+                    label={field.label}
+                    options={field.options}
+                    value={rhfField.value}
+                    onChange={rhfField.onChange}
+                    onBlur={rhfField.onBlur}
+                    name={rhfField.name}
+                    direction={field.direction}
+                    error={Boolean(fieldError)}
+                    helperText={errorMessage ?? field.helperText}
+                  />
+                )}
+              />
             ) : (
               <TextField
                 type={field.type}
@@ -232,8 +259,8 @@ export default function ReusableForm<TFieldValues extends FieldValues>({
           disabled={isSubmitting}
           className={cn(
             "inline-flex h-10.5 items-center justify-center rounded px-6 border",
-            "bg-mui-primary text-sm font-medium uppercase tracking-wide text-white",
-            "shadow-sm transition-colors hover:bg-mui-primaryHover",
+            "bg-primary text-sm font-medium uppercase tracking-wide text-white",
+            "shadow-sm transition-colors hover:bg-primaryHover",
             "disabled:cursor-not-allowed disabled:opacity-60",
           )}
         >

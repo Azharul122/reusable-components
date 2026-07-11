@@ -47,6 +47,10 @@ export const profileSchema = z
       message: "You must accept the terms to continue",
     }),
 
+    gender: z.enum(["male", "female", "other"], {
+      message: "Please select an option",
+    }),
+
     // Checkbox group, at least one required
     interests: z.array(z.string()).min(1, "Select at least one option"),
 

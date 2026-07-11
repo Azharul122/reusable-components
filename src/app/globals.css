@@ -12,6 +12,24 @@
   --font-mono: var(--font-geist-mono);
 }
 
+@theme {
+  --color-primary: #025b6d;
+  --color-primary-hover: #03444b;
+
+  --color-secondary: #5ed9ba;
+  --color-secondary-hover: #4db8a0;
+
+  --color-error: #ff4d4f;
+
+  --color-primary-text: #f7c25f;
+  --color-primary-text-hover: #ffd27a;
+  --color-secondary: #5ed9ba;
+  --color-secondary-hover: #4db8a0;
+
+  --color-background: #ffffff;
+  --color-foreground: #171717;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
