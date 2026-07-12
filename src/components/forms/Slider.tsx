@@ -93,7 +93,7 @@ export function Slider(props: SliderProps) {
       {(label || showValue) && (
         <div className="mb-2 flex items-center justify-between">
           {label && (
-            <span className="text-sm font-medium text-primary-text">
+            <span className="text-sm font-medium ">
               {label}
             </span>
           )}
@@ -111,7 +111,7 @@ export function Slider(props: SliderProps) {
         <div
           className={cn(
             "absolute h-1.5 w-full rounded-full",
-            error ? "bg-red-200" : "bg-mui-border",
+            error ? "bg-red-200" : "bg-gray-300",
           )}
         />
         <div
