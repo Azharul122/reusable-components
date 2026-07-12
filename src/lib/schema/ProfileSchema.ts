@@ -65,6 +65,9 @@ export const profileSchema = z
       message: "Minimum price must be less than or equal to maximum price",
     }),
 
+    experience: z.number().min(0, "Experience must be at least 0").max(5, "Experience must be less than 5"),
+    rating: z.number().min(0, "Rating must be at least 0").max(5, "Rating must be less than 5"),
+
     // Checkbox group, at least one required
     interests: z.array(z.string()).min(1, "Select at least one option"),
 

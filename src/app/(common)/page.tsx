@@ -200,6 +200,22 @@ const fields: FieldConfig<ProfileFormValues>[] = [
     formatValue: (v) => `$${v}`,
     colSpan: 12,
   },
+  {
+    type: "rating",
+    name: "experience", // number field
+    label: "Experience",
+    max: 5,
+    colSpan: 12,
+  },
+  {
+    type: "rating",
+    name: "rating", // number field
+    label: "Rating",
+    max: 5,
+    precision: 1,
+    mode: "edit",
+    colSpan: 12,
+  },
 ];
 
 export default function Home() {
@@ -233,13 +249,15 @@ export default function Home() {
       interest: [],
       maxPrice: 0,
       priceRange: [0, 0],
+      experience: 4.75,
+      rating: 0,
     }),
     [], // recompute only when the real source data changes
   );
 
   return (
     <main className="mx-auto flex min-h-screen max-w-2xl flex-col justify-center px-6 py-16">
-      <h1 className="mb-1 text-2xl font-medium text-primary-text">
+      <h1 className="mb-1 text-2xl font-medium ">
         Create profile
       </h1>
       <p className="mb-8 text-sm text-mui-text-secondary">

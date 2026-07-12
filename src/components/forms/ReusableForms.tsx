@@ -22,6 +22,7 @@ import { RadioGroup, RadioOption } from "./RadioField";
 import DateField, { DateValue } from "./DateField";
 import { Switch, SwitchGroup, SwitchOption } from "./Switch";
 import { Slider } from "./Slider";
+import RatingField from "./RatingField";
 
 type BaseFieldConfig<TFieldValues extends FieldValues> = {
   name: Path<TFieldValues>;
@@ -101,6 +102,14 @@ type SliderFieldConfig<TFieldValues extends FieldValues> =
     showValue?: boolean;
   };
 
+type RatingFieldConfig<TFieldValues extends FieldValues> =
+  BaseFieldConfig<TFieldValues> & {
+    type: "rating";
+    max?: number;
+    precision?: number;
+    mode?: "view" | "edit";
+  };
+
 export type FieldConfig<TFieldValues extends FieldValues> =
   | TextFieldConfig<TFieldValues>
   | SelectFieldConfig<TFieldValues>
@@ -111,7 +120,8 @@ export type FieldConfig<TFieldValues extends FieldValues> =
   | SwitchGroupFieldConfig<TFieldValues>
   | RadioFieldConfig<TFieldValues>
   | DateFieldConfig<TFieldValues>
-  | SliderFieldConfig<TFieldValues>;
+  | SliderFieldConfig<TFieldValues>
+  | RatingFieldConfig<TFieldValues>;
 
 export interface ReusableFormProps<TFieldValues extends FieldValues> {
   schema: ZodType<TFieldValues, TFieldValues>;
@@ -255,6 +265,26 @@ export default function ReusableForm<TFieldValues extends FieldValues>({
                     onBlur={rhfField.onBlur}
                     error={Boolean(fieldError)}
                     helperText={errorMessage ?? field.helperText}
+                  />
+                )}
+              />
+            ) : field.type === "rating" ? (
+              <Controller
+                name={field.name}
+                control={control}
+                render={({ field: rhfField }) => (
+                  <RatingField
+                    label={field.label}
+                    max={field.max}
+                    precision={field.precision}
+                    value={rhfField.value}
+                    onChange={rhfField.onChange}
+                    onBlur={rhfField.onBlur}
+                    name={rhfField.name}
+                    error={Boolean(fieldError)}
+                    helperText={errorMessage ?? field.helperText}
+                    fullWidth={field.fullWidth ?? true}
+                    mode={field.mode ?? "view"}
                   />
                 )}
               />
