@@ -152,7 +152,7 @@ const FileUploader = React.forwardRef<HTMLInputElement, FileUploaderProps>(
       onChange,
       onBlur,
       className,
-      labelBackgroundClassName = "bg-black text-white",
+      labelBackgroundClassName = " bg-white",
     },
     forwardedRef,
   ) => {
@@ -413,7 +413,7 @@ const FileUploader = React.forwardRef<HTMLInputElement, FileUploaderProps>(
               )}
             >
               <UploadCloud className="h-7 w-7 text-mui-text-secondary" />
-              <p className="text-sm text-primary-text">
+              <p className="text-sm ">
                 <span className="font-medium text-mui-primary">
                   Click to upload
                 </span>{" "}
@@ -449,7 +449,7 @@ const FileUploader = React.forwardRef<HTMLInputElement, FileUploaderProps>(
                   >
                     <FilePreviewThumb name={name} type={type} url={url} />
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium text-primary-text">
+                      <p className="truncate text-sm font-medium ">
                         {name}
                       </p>
                       <p className="text-xs text-mui-text-secondary">
@@ -465,7 +465,7 @@ const FileUploader = React.forwardRef<HTMLInputElement, FileUploaderProps>(
                         "flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-mui-text-secondary transition-colors",
                         disabled
                           ? "cursor-not-allowed"
-                          : "cursor-pointer hover:bg-mui-hoverBg hover:text-primary-text",
+                          : "cursor-pointer hover:bg-mui-hoverBg hover:",
                       )}
                     >
                       <X className="h-4 w-4" />
