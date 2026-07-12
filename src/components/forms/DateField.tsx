@@ -126,7 +126,7 @@ const DateField = React.forwardRef<HTMLButtonElement, DateFieldProps>(
       disabled = false,
       placeholder,
       id,
-      labelBackgroundClassName = "bg-black text-white",
+      labelBackgroundClassName = "bg-background text-primary",
       multiple = false,
       bookedDates,
       disablePast = true,
@@ -278,7 +278,7 @@ const DateField = React.forwardRef<HTMLButtonElement, DateFieldProps>(
     const borderColor = error
       ? "border-mui-error"
       : focused || open
-        ? "border-mui-primary"
+        ? "border-primary"
         : "border-mui-border";
     const borderWidth = focused || open || error ? "border-2" : "border";
 
@@ -338,6 +338,7 @@ const DateField = React.forwardRef<HTMLButtonElement, DateFieldProps>(
           className={cn(
             "relative flex w-full min-w-0 items-center justify-between gap-2 rounded transition-colors duration-150",
             "px-3.5 text-left",
+
             heightClass,
             textSize,
             borderWidth,
@@ -355,7 +356,7 @@ const DateField = React.forwardRef<HTMLButtonElement, DateFieldProps>(
           <span
             className={cn(
               "min-w-0 flex-1 truncate",
-              selectedDates.length ? "text-primary-text" : "text-transparent",
+              selectedDates.length ? "" : "text-transparent",
             )}
           >
             {displayLabel}
@@ -373,7 +374,7 @@ const DateField = React.forwardRef<HTMLButtonElement, DateFieldProps>(
                 <X className="h-4 w-4" />
               </span>
             )}
-            <CalendarDays className="h-5 w-5 shrink-0 text-mui-text-secondary" />
+            <CalendarDays className={`h-5 w-5 shrink-0 text-mui-text-secondary ${shrink ? "opacity-100 text-primary" : "opacity-0"}`} />
           </div>
         </button>
 
@@ -399,16 +400,16 @@ const DateField = React.forwardRef<HTMLButtonElement, DateFieldProps>(
             role="dialog"
             aria-label={label ? `${label} calendar` : "Choose a date"}
             className={cn(
-              "absolute z-9999 mt-1 w-[300px] rounded  p-3 bg-black",
+              "absolute z-9999 mt-1 w-[300px] rounded  p-3 bg-background",
               "shadow-mui outline-none",
             )}
           >
             {multiple && selectedDates.length > 0 && (
-              <div className="mb-3 flex flex-wrap gap-1.5 border-b border-mui-border pb-3">
+              <div className="mb-3 flex flex-wrap gap-1.5  border-mui-border pb-3">
                 {selectedDates.map((iso) => (
                   <span
                     key={iso}
-                    className="flex items-center gap-1 rounded-full bg-mui-selectedBg px-2.5 py-1 text-xs font-medium text-primary-text"
+                    className="flex items-center gap-1 rounded-full bg-mui-selectedBg px-2.5 py-1 text-xs font-medium "
                   >
                     {formatDate(fromISODate(iso))}
                     <span
@@ -439,7 +440,7 @@ const DateField = React.forwardRef<HTMLButtonElement, DateFieldProps>(
                 <ChevronLeft className="h-4 w-4" />
               </button>
 
-              <span className="text-sm font-medium text-primary-text">
+              <span className="text-sm font-medium ">
                 {monthLabel}
               </span>
 
@@ -481,7 +482,7 @@ const DateField = React.forwardRef<HTMLButtonElement, DateFieldProps>(
                       "flex h-9 w-9 items-center justify-center rounded-full text-sm transition-colors",
                       isSelected
                         ? "bg-primary font-medium text-white"
-                        : "text-primary-text hover:bg-mui-hoverBg",
+                        : " hover:bg-mui-hoverBg",
                       !isSelected && isToday && "border border-mui-primary",
                       dayDisabled &&
                         "cursor-not-allowed text-mui-text-secondary line-through opacity-40 hover:bg-transparent",
@@ -494,7 +495,7 @@ const DateField = React.forwardRef<HTMLButtonElement, DateFieldProps>(
             </div>
 
             {multiple && (
-              <div className="mt-3 flex justify-end border-t border-mui-border pt-3">
+              <div className="mt-3 flex justify-end  border-mui-border pt-3">
                 <button
                   type="button"
                   onClick={() => closeMenu()}
