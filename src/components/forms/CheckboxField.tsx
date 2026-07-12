@@ -118,7 +118,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
             <span
               className={cn(
                 textSize,
-                error ? "text-error" : "text-primary-text",
+                error ? "text-error" : "",
               )}
             >
               {label}
