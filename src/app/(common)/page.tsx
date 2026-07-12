@@ -216,6 +216,13 @@ const fields: FieldConfig<ProfileFormValues>[] = [
     mode: "edit",
     colSpan: 12,
   },
+  {
+    type: "time",
+    name: "time", // string field
+    label: "Select time",
+    colSpan: 12,
+    use12Hours: true, // optional, defaults to false (12-hour format)
+  },
 ];
 
 export default function Home() {
@@ -251,15 +258,14 @@ export default function Home() {
       priceRange: [0, 0],
       experience: 4.75,
       rating: 0,
+      time: "",
     }),
     [], // recompute only when the real source data changes
   );
 
   return (
     <main className="mx-auto flex min-h-screen max-w-2xl flex-col justify-center px-6 py-16">
-      <h1 className="mb-1 text-2xl font-medium ">
-        Create profile
-      </h1>
+      <h1 className="mb-1 text-2xl font-medium ">Create profile</h1>
       <p className="mb-8 text-sm text-mui-text-secondary">
         Reusable Input / Select components styled after Material UI, validated
         with Zod via React Hook Form.

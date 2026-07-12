@@ -23,6 +23,7 @@ import DateField, { DateValue } from "./DateField";
 import { Switch, SwitchGroup, SwitchOption } from "./Switch";
 import { Slider } from "./Slider";
 import RatingField from "./RatingField";
+import TimeField from "./TimePicker";
 
 type BaseFieldConfig<TFieldValues extends FieldValues> = {
   name: Path<TFieldValues>;
@@ -110,6 +111,17 @@ type RatingFieldConfig<TFieldValues extends FieldValues> =
     mode?: "view" | "edit";
   };
 
+type TimeFieldConfig<TFieldValues extends FieldValues> =
+  BaseFieldConfig<TFieldValues> & {
+    type: "time";
+    use12Hours?: boolean;
+    showSecond?: boolean;
+    minuteStep?: number;
+    disabledHours?: () => number[];
+    disabledMinutes?: (h: number) => number[];
+    disabledSeconds?: (h: number, m: number) => number[];
+  };
+
 export type FieldConfig<TFieldValues extends FieldValues> =
   | TextFieldConfig<TFieldValues>
   | SelectFieldConfig<TFieldValues>
@@ -121,7 +133,8 @@ export type FieldConfig<TFieldValues extends FieldValues> =
   | RadioFieldConfig<TFieldValues>
   | DateFieldConfig<TFieldValues>
   | SliderFieldConfig<TFieldValues>
-  | RatingFieldConfig<TFieldValues>;
+  | RatingFieldConfig<TFieldValues>
+  | TimeFieldConfig<TFieldValues>;
 
 export interface ReusableFormProps<TFieldValues extends FieldValues> {
   schema: ZodType<TFieldValues, TFieldValues>;
@@ -229,6 +242,29 @@ export default function ReusableForm<TFieldValues extends FieldValues>({
                     defaultValue={field.defaultFiles}
                     onChange={(payload) => rhfField.onChange(payload)}
                     onBlur={rhfField.onBlur}
+                    error={Boolean(fieldError)}
+                    helperText={errorMessage ?? field.helperText}
+                    fullWidth={field.fullWidth ?? true}
+                  />
+                )}
+              />
+            ) : field.type === "time" ? (
+              <Controller
+                name={field.name}
+                control={control}
+                render={({ field: rhfField }) => (
+                  <TimeField
+                    label={field.label}
+                    use12Hours={field.use12Hours}
+                    showSecond={field.showSecond}
+                    minuteStep={field.minuteStep}
+                    disabledHours={field.disabledHours}
+                    disabledMinutes={field.disabledMinutes}
+                    disabledSeconds={field.disabledSeconds}
+                    value={rhfField.value}
+                    onChange={rhfField.onChange}
+                    onBlur={rhfField.onBlur}
+                    name={rhfField.name}
                     error={Boolean(fieldError)}
                     helperText={errorMessage ?? field.helperText}
                     fullWidth={field.fullWidth ?? true}
