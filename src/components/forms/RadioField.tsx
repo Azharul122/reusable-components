@@ -107,7 +107,7 @@ export const Radio = React.forwardRef<HTMLInputElement, RadioProps>(
           <span
             className={cn(
               textSize,
-              error ? "text-error" : "text-primary-text",
+              error ? "text-error" : "",
             )}
           >
             {label}
