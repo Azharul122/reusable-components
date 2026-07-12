@@ -58,7 +58,7 @@ const TextField = React.forwardRef<HTMLInputElement, TextFieldProps>(
       size = "medium",
       startAdornment,
       endAdornment,
-      labelBackgroundClassName = "bg-black text-white",
+      labelBackgroundClassName = " bg-white",
       showPasswordToggle,
       className,
       id,
@@ -134,7 +134,7 @@ const TextField = React.forwardRef<HTMLInputElement, TextFieldProps>(
     const borderColor = showError
       ? "border-mui-error"
       : focused
-        ? "border-mui-primary"
+        ? "border-primary"
         : "border-mui-border";
 
     const borderWidth = focused || showError ? "border-2" : "border";
@@ -142,7 +142,7 @@ const TextField = React.forwardRef<HTMLInputElement, TextFieldProps>(
     const labelColor = showError
       ? "text-error"
       : focused
-        ? "text-mui-primary"
+        ? "border-primary text-primary"
         : "text-mui-text-secondary";
 
     // Resolve the actual <input type>: flip between password/text when toggled
@@ -220,7 +220,7 @@ const TextField = React.forwardRef<HTMLInputElement, TextFieldProps>(
               "px-3.5",
               inputPadding,
               inputTextSize,
-              "text-primary-text placeholder:text-transparent",
+              " placeholder:text-transparent",
               "disabled:cursor-not-allowed disabled:text-mui-text-disabled",
               startAdornment && "pl-1",
               resolvedEndAdornment && "pr-1",
