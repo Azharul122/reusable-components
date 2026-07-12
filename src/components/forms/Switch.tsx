@@ -66,11 +66,11 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
             onClick={() => onChange(!checked)}
             onBlur={onBlur}
             className={cn(
-              "relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full border transition-colors duration-200 ease-in-out",
+              "relative  inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full border transition-colors duration-200 ease-in-out",
               "focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2",
               checked
                 ? "border-primary bg-primary"
-                : "border-mui-border bg-mui-border/60",
+                : "border-gray-300 bg-gray-200",
               error && "border-red-500",
               disabled && "pointer-events-none",
             )}
@@ -84,7 +84,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
           </button>
 
           {label && (
-            <span className="text-sm font-medium text-primary-text">
+            <span className="text-sm font-medium ">
               {label}
             </span>
           )}
@@ -146,7 +146,7 @@ export const SwitchGroup = React.forwardRef<HTMLDivElement, SwitchGroupProps>(
     return (
       <div ref={ref} className={cn(fullWidth && "w-full", className)}>
         {label && (
-          <p className="mb-2 text-sm font-medium text-primary-text">
+          <p className="mb-2 text-sm font-medium ">
             {label}
           </p>
         )}
