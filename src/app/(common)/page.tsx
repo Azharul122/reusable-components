@@ -17,6 +17,7 @@ import Breadcrumbs from "@/src/components/ui/Breadcrumbs";
 import Link from "next/link";
 import Steps from "@/src/components/ui/Stepper";
 import PageLoader from "@/src/components/shared/loader/Loader";
+import EmptyState from "@/src/components/ui/Empty";
 
 const countryOptions = [
   { value: "us", label: "United States" },
@@ -237,7 +238,7 @@ export default function Home() {
   );
 
   const [page, setPage] = useState(1);
-    const [step, setStep] = useState(1);
+  const [step, setStep] = useState(1);
   const steps = [
     { label: "Cart" },
     { label: "Shipping", description: "Address & method" },
@@ -318,7 +319,20 @@ export default function Home() {
       <Steps steps={steps} currentStep={step} onStepClick={setStep} />
 
       {/* Loader */}
-      <PageLoader variant="inline" size="md" minHeight="200px" className="border" label="Data is loading..." />
+      <PageLoader
+        variant="inline"
+        size="md"
+        minHeight="200px"
+        className="border"
+        label="Data is loading..."
+      />
+
+      {/* Empty */}
+      <EmptyState
+        title="No data available"
+        description="There is no data to display at the moment."
+        variant= "search"
+      />
     </main>
   );
 }
