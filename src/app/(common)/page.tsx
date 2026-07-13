@@ -11,6 +11,10 @@ import ReusableForm, {
   FieldConfig,
 } from "@/src/components/forms/ReusableForms";
 import { DateValue } from "@/src/components/forms/DateField";
+import { useState } from "react";
+import Pagination from "@/src/components/ui/Pagination";
+import Breadcrumbs from "@/src/components/ui/Breadcrumbs";
+import Link from "next/link";
 
 const countryOptions = [
   { value: "us", label: "United States" },
@@ -230,6 +234,9 @@ export default function Home() {
     null,
   );
 
+  const [page, setPage] = useState(1);
+  const totalPages = 24;
+
   const onSubmit = (data: ProfileFormValues) => {
     setSubmitted(data);
   };
@@ -281,14 +288,20 @@ export default function Home() {
         />
       </div>
 
-      {submitted && (
-        <div className="mt-6 rounded border border-green-600/30 bg-green-50 p-4 text-sm text-green-800">
-          Submitted successfully. Check the console for the full payload.
-          <pre className="mt-2 overflow-auto text-xs text-green-900">
-            {JSON.stringify(submitted, null, 2)}
-          </pre>
-        </div>
-      )}
+      <Pagination
+        currentPage={page}
+        totalPages={totalPages}
+        onPageChange={setPage}
+      />
+
+      <Breadcrumbs
+        linkAs={Link}
+        items={[
+          { label: "Settings", href: "/settings" },
+          { label: "Team", href: "/settings/team" },
+          { label: "Members" }, // no href = current page
+        ]}
+      />
     </main>
   );
 }
