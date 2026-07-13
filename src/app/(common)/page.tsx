@@ -15,6 +15,8 @@ import { useState } from "react";
 import Pagination from "@/src/components/ui/Pagination";
 import Breadcrumbs from "@/src/components/ui/Breadcrumbs";
 import Link from "next/link";
+import Steps from "@/src/components/ui/Stepper";
+import PageLoader from "@/src/components/shared/loader/Loader";
 
 const countryOptions = [
   { value: "us", label: "United States" },
@@ -235,6 +237,14 @@ export default function Home() {
   );
 
   const [page, setPage] = useState(1);
+    const [step, setStep] = useState(1);
+  const steps = [
+    { label: "Cart" },
+    { label: "Shipping", description: "Address & method" },
+    { label: "Payment" },
+    { label: "Review", optional: true },
+  ];
+
   const totalPages = 24;
 
   const onSubmit = (data: ProfileFormValues) => {
@@ -302,6 +312,13 @@ export default function Home() {
           { label: "Members" }, // no href = current page
         ]}
       />
+
+      {/* Stepper */}
+
+      <Steps steps={steps} currentStep={step} onStepClick={setStep} />
+
+      {/* Loader */}
+      <PageLoader variant="inline" size="md" minHeight="200px" className="border" label="Data is loading..." />
     </main>
   );
 }
