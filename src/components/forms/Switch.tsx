@@ -26,11 +26,7 @@ export interface SwitchProps extends BaseSwitchProps {
   name?: string;
 }
 
-/**
- * Single toggle switch. Mirrors the API shape of `Checkbox`
- * (checked / onChange / onBlur / error / helperText) so it can be
- * dropped into ReusableForm the same way.
- */
+
 export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
   (
     {
@@ -114,10 +110,7 @@ export interface SwitchGroupProps extends BaseSwitchProps {
   direction?: "row" | "column";
 }
 
-/**
- * Group of related switches bound to a single string[] value.
- * Mirrors `CheckboxGroup`'s API.
- */
+
 export const SwitchGroup = React.forwardRef<HTMLDivElement, SwitchGroupProps>(
   (
     {

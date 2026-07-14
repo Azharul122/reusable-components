@@ -21,10 +21,8 @@ export interface TimeFieldProps {
   disabled?: boolean;
   placeholder?: string;
   id?: string;
-  /** Background the shrunk label notch is drawn on top of, defaults to bg-white */
-  labelBackgroundClassName?: string;
 
-  /** Show a 12-hour column + AM/PM column instead of a single 24-hour column. */
+  labelBackgroundClassName?: string;
   use12Hours?: boolean;
   /** Show the seconds column. Defaults to true. */
   showSecond?: boolean;

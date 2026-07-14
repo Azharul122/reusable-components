@@ -208,7 +208,7 @@ const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
       }
     };
 
-    // Used by the <ul> in single-select mode (no search box to steal keys)
+
     const handleListKeyDown = (e: React.KeyboardEvent) => {
       switch (e.key) {
         case "ArrowDown":

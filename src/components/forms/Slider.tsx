@@ -14,7 +14,6 @@ type BaseSliderProps = {
   min?: number;
   max?: number;
   step?: number;
-  /** e.g. (v) => `$${v}` for pricing */
   formatValue?: (value: number) => string;
   showValue?: boolean;
   name?: string;
@@ -37,12 +36,7 @@ export type SliderProps = SliderSingleProps | SliderRangeProps;
 
 const defaultFormat = (v: number) => String(v);
 
-/**
- * Single-thumb slider (`range` omitted/false, value: number) or
- * dual-thumb range slider (`range: true`, value: [number, number]).
- * Built on two native <input type="range"> stacked over one track,
- * so keyboard/a11y behavior comes for free.
- */
+
 export function Slider(props: SliderProps) {
   const {
     label,
