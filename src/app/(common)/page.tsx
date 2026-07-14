@@ -102,8 +102,8 @@ const fields: FieldConfig<ProfileFormValues>[] = [
     label: "Documents",
     accept: "*/*",
     maxSizeMB: 5,
-    multiple: true, // ← turns on multi-file mode
-    maxFiles: 5, // ← optional cap
+    multiple: true, 
+    maxFiles: 5, 
     colSpan: 6,
   },
   {
@@ -167,14 +167,14 @@ const fields: FieldConfig<ProfileFormValues>[] = [
 
   {
     type: "switch",
-    name: "agreeTerms", // boolean field, same shape as the checkbox version
+    name: "agreeTerms",
     label: "Accept terms and conditions",
     colSpan: 12,
   },
 
   {
     type: "switch-group",
-    name: "interest", // string[] field, same shape as checkbox-group
+    name: "interest",
     label: "Notification preferences",
     direction: "column",
     options: [
@@ -187,7 +187,7 @@ const fields: FieldConfig<ProfileFormValues>[] = [
 
   {
     type: "slider",
-    name: "maxPrice", // number field
+    name: "maxPrice", 
     label: "Maximum price",
     min: 0,
     max: 1000,
@@ -209,14 +209,14 @@ const fields: FieldConfig<ProfileFormValues>[] = [
   },
   {
     type: "rating",
-    name: "experience", // number field
+    name: "experience", 
     label: "Experience",
     max: 5,
     colSpan: 12,
   },
   {
     type: "rating",
-    name: "rating", // number field
+    name: "rating",
     label: "Rating",
     max: 5,
     precision: 1,
@@ -225,10 +225,10 @@ const fields: FieldConfig<ProfileFormValues>[] = [
   },
   {
     type: "time",
-    name: "time", // string field
+    name: "time", 
     label: "Select time",
     colSpan: 12,
-    use12Hours: true, // optional, defaults to false (12-hour format)
+    use12Hours: true, 
   },
 ];
 
@@ -278,7 +278,7 @@ export default function Home() {
       rating: 0,
       time: "",
     }),
-    [], // recompute only when the real source data changes
+    [], 
   );
 
   return (
@@ -331,7 +331,7 @@ export default function Home() {
       <EmptyState
         title="No data available"
         description="There is no data to display at the moment."
-        variant= "search"
+        variant="search"
       />
     </main>
   );
