@@ -21,31 +21,17 @@ export interface TimeFieldProps {
   disabled?: boolean;
   placeholder?: string;
   id?: string;
-
   labelBackgroundClassName?: string;
   use12Hours?: boolean;
-  /** Show the seconds column. Defaults to true. */
   showSecond?: boolean;
-  /** Only show every Nth hour in the column. Defaults to 1. */
   hourStep?: number;
-  /** Only show every Nth minute in the column. Defaults to 1. */
   minuteStep?: number;
-  /** Only show every Nth second in the column. Defaults to 1. */
   secondStep?: number;
-  /** Same signature as antd: return the (24-hour) hours that can't be picked. */
   disabledHours?: () => number[];
-  /** Same signature as antd: return the minutes disabled for a given hour. */
   disabledMinutes?: (selectedHour: number) => number[];
-  /** Same signature as antd: return the seconds disabled for a given hour/minute. */
   disabledSeconds?: (selectedHour: number, selectedMinute: number) => number[];
-  /** Show the "Now" shortcut button. Defaults to true. */
   showNow?: boolean;
-  /** Show the clear (X) icon once a value is set. Defaults to true. */
   allowClear?: boolean;
-  /**
-   * Display format tokens: HH/H (24h), hh/h (12h), mm/m, ss/s, A (AM/PM),
-   * a (am/pm). Defaults based on `use12Hours` / `showSecond`.
-   */
   format?: string;
 }
 
