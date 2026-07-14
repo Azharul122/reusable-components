@@ -18,6 +18,7 @@ import Link from "next/link";
 import Steps from "@/src/components/ui/Stepper";
 import PageLoader from "@/src/components/shared/loader/Loader";
 import EmptyState from "@/src/components/ui/Empty";
+import ProgressBar from "@/src/components/ui/Progressbar";
 
 const countryOptions = [
   { value: "us", label: "United States" },
@@ -198,7 +199,7 @@ const fields: FieldConfig<ProfileFormValues>[] = [
 
   {
     type: "slider",
-    name: "priceRange", // [number, number] field
+    name: "priceRange", 
     label: "Price range",
     range: true,
     min: 0,
@@ -333,6 +334,9 @@ export default function Home() {
         description="There is no data to display at the moment."
         variant="search"
       />
+
+      {/* Progress bar */}
+      <ProgressBar value={50} max={100} />
     </main>
   );
 }
