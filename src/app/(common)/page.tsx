@@ -19,6 +19,7 @@ import Steps from "@/src/components/ui/Stepper";
 import PageLoader from "@/src/components/shared/loader/Loader";
 import EmptyState from "@/src/components/ui/Empty";
 import ProgressBar from "@/src/components/ui/Progressbar";
+import ColorPicker from "@/src/components/ui/ColorPicker";
 
 const countryOptions = [
   { value: "us", label: "United States" },
@@ -337,6 +338,13 @@ export default function Home() {
 
       {/* Progress bar */}
       <ProgressBar value={50} max={100} />
+
+
+      {/* Color picker */}
+      <ColorPicker  onChange={(c) => console.log(c)}  />
+
+
+      <div className="pb-[300px]"></div>
     </main>
   );
 }

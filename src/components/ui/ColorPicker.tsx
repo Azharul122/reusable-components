@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/immutability */
 "use client";
 
 import * as React from "react";
@@ -459,17 +460,41 @@ const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
       [hsva, onChangeComplete],
     );
 
-    // Position popover under trigger, clamped to viewport width
+    // Position popover relative to the trigger, clamped to the viewport.
+    // Flips above the trigger when there isn't enough room below (and vice
+    // versa) — the same auto-placement behavior antd's popover uses.
     const updatePosition = React.useCallback(() => {
-      const el = triggerRef.current;
-      if (!el) return;
-      const rect = el.getBoundingClientRect();
+      const triggerEl = triggerRef.current;
+      if (!triggerEl) return;
+
+      const gap = 8;
+      const edgePadding = 8;
       const popoverWidth = 248;
-      let left = rect.left;
-      if (left + popoverWidth > window.innerWidth - 8) {
-        left = window.innerWidth - popoverWidth - 8;
+      // Real height once mounted; a sensible fallback for the very first
+      // measurement pass before the popover has painted.
+      const popoverHeight = popoverRef.current?.offsetHeight ?? 360;
+
+      const triggerRect = triggerEl.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - triggerRect.bottom;
+      const spaceAbove = triggerRect.top;
+
+      let top: number;
+      if (spaceBelow >= popoverHeight + gap || spaceBelow >= spaceAbove) {
+        // Enough room below, or at least more room below than above.
+        top = triggerRect.bottom + gap;
+      } else {
+        // Not enough room below — flip above the trigger.
+        top = triggerRect.top - popoverHeight - gap;
       }
-      setPos({ top: rect.bottom + 8, left: Math.max(8, left) });
+      top = clamp(top, edgePadding, Math.max(edgePadding, window.innerHeight - popoverHeight - edgePadding));
+
+      let left = triggerRect.left;
+      if (left + popoverWidth > window.innerWidth - edgePadding) {
+        left = window.innerWidth - popoverWidth - edgePadding;
+      }
+      left = Math.max(edgePadding, left);
+
+      setPos({ top, left });
     }, []);
 
     React.useLayoutEffect(() => {
@@ -528,7 +553,10 @@ const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
           ref={triggerRef}
           type="button"
           disabled={disabled}
-          onClick={() => setOpen((o) => !o)}
+          onClick={() => {
+            setPos(null);
+            setOpen((o) => !o);
+          }}
           className={cn(
             "inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-2 py-1.5 shadow-sm transition-colors hover:border-gray-400",
             "disabled:cursor-not-allowed disabled:opacity-50",
@@ -545,14 +573,20 @@ const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
         </button>
 
         {open &&
-          pos &&
           createPortal(
             <div
               ref={popoverRef}
               role="dialog"
               aria-label="Color picker"
               className="fixed z-[9999] w-[248px] rounded-lg border border-gray-200 bg-white p-3 shadow-lg"
-              style={{ top: pos.top, left: pos.left }}
+              // Rendered off-screen (but still measurable) until the layout
+              // effect below computes a real, flip-aware position — this
+              // runs before paint so there's no visible flash.
+              style={
+                pos
+                  ? { top: pos.top, left: pos.left }
+                  : { top: 0, left: -9999, visibility: "hidden" }
+              }
             >
               <SaturationPanel
                 hsva={hsva}
