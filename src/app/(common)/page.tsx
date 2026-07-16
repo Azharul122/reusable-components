@@ -20,6 +20,10 @@ import PageLoader from "@/src/components/shared/loader/Loader";
 import EmptyState from "@/src/components/ui/Empty";
 import ProgressBar from "@/src/components/ui/Progressbar";
 import ColorPicker from "@/src/components/ui/ColorPicker";
+import MentionInput, {
+  MentionData,
+  MentionUser,
+} from "@/src/components/ui/mention/MentionInput";
 
 const countryOptions = [
   { value: "us", label: "United States" },
@@ -104,8 +108,8 @@ const fields: FieldConfig<ProfileFormValues>[] = [
     label: "Documents",
     accept: "*/*",
     maxSizeMB: 5,
-    multiple: true, 
-    maxFiles: 5, 
+    multiple: true,
+    maxFiles: 5,
     colSpan: 6,
   },
   {
@@ -189,7 +193,7 @@ const fields: FieldConfig<ProfileFormValues>[] = [
 
   {
     type: "slider",
-    name: "maxPrice", 
+    name: "maxPrice",
     label: "Maximum price",
     min: 0,
     max: 1000,
@@ -200,7 +204,7 @@ const fields: FieldConfig<ProfileFormValues>[] = [
 
   {
     type: "slider",
-    name: "priceRange", 
+    name: "priceRange",
     label: "Price range",
     range: true,
     min: 0,
@@ -211,7 +215,7 @@ const fields: FieldConfig<ProfileFormValues>[] = [
   },
   {
     type: "rating",
-    name: "experience", 
+    name: "experience",
     label: "Experience",
     max: 5,
     colSpan: 12,
@@ -227,10 +231,10 @@ const fields: FieldConfig<ProfileFormValues>[] = [
   },
   {
     type: "time",
-    name: "time", 
+    name: "time",
     label: "Select time",
     colSpan: 12,
-    use12Hours: true, 
+    use12Hours: true,
   },
 ];
 
@@ -280,8 +284,22 @@ export default function Home() {
       rating: 0,
       time: "",
     }),
-    [], 
+    [],
   );
+
+  const DEMO_USERS: MentionUser[] = [
+    { id: "1", name: "Rafiul Islam", username: "rafiul" },
+    { id: "2", name: "Nusrat Jahan", username: "nusrat.j" },
+    { id: "3", name: "Tanvir Ahmed", username: "tanvir_a" },
+    { id: "4", name: "Farhana Akter", username: "farhana" },
+    { id: "5", name: "Shakil Hasan", username: "shakil.h" },
+    { id: "6", name: "Mim Chowdhury", username: "mim_c" },
+    { id: "7", name: "Arif Rahman", username: "arif.rahman" },
+  ];
+
+  const handleChange = (data: MentionData) => {
+    console.log("onChange:", data);
+  };
 
   return (
     <main className="mx-auto flex min-h-screen max-w-2xl flex-col justify-center px-6 py-16">
@@ -339,12 +357,17 @@ export default function Home() {
       {/* Progress bar */}
       <ProgressBar value={50} max={100} />
 
-
       {/* Color picker */}
-      <ColorPicker  onChange={(c) => console.log(c)}  />
-
+      <ColorPicker onChange={(c) => console.log(c)} />
 
       <div className="pb-[300px]"></div>
+
+      {/* Mention Input */}
+      <MentionInput
+        users={DEMO_USERS}
+        label="Message"
+        onChange={handleChange}
+      />
     </main>
   );
 }
