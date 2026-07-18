@@ -8,20 +8,17 @@ export interface MentionUser {
   username: string;
 }
 
-/** What actually gets stored/persisted per selected mention. */
 export interface SelectedMention {
   username: string;
   name: string;
 }
 
-/** Range of the "@query" currently being typed, if any. */
 export interface ActiveQuery {
   text: string;
   start: number;
   end: number;
 }
 
-/** Payload emitted on submit / onChange. */
 export interface MentionData {
   text: string;
   mentions: string[];
@@ -33,20 +30,6 @@ interface MentionInputProps {
   onChange?: (data: MentionData) => void;
 }
 
-/**
- * -----------------------------------------------------------------------
- * MentionInput
- * `position: relative` wrapper containing the input field (with a
- * floating label). Owns all the state: current text, active "@query"
- * range, and the selected mentions. Renders <MentionDropdown /> absolutely
- * inside itself while a mention query is active.
- *
- * Display vs. storage:
- * - The dropdown and the inline text show the user's `name` (readable).
- * - `selectedUsers` state and the data passed to `onChange` / logged on
- *   submit store `username` (the stable, unique identifier).
- * -----------------------------------------------------------------------
- */
 export default function MentionInput({
   users,
   label = "Message",
@@ -68,10 +51,9 @@ export default function MentionInput({
     activeQuery === null
       ? []
       : users.filter((u) =>
-          u.name.toLowerCase().includes(activeQuery.text.toLowerCase())
+          u.name.toLowerCase().includes(activeQuery.text.toLowerCase()),
         );
 
-  // Detect an "@query" immediately before the caret on every keystroke.
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const text = e.target.value;
     const cursor = e.target.selectionStart ?? text.length;
@@ -102,11 +84,10 @@ export default function MentionInput({
 
     setValue(nextValue);
 
-    // ...but what gets stored is the username.
     setSelectedUsers((prev) =>
       prev.some((u) => u.username === user.username)
         ? prev
-        : [...prev, { username: user.username, name: user.name }]
+        : [...prev, { username: user.username, name: user.name }],
     );
     setActiveQuery(null);
 
@@ -120,10 +101,12 @@ export default function MentionInput({
     setSelectedUsers((prev) => prev.filter((u) => u.username !== username));
   };
 
-  // Close the dropdown on outside click.
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(e.target as Node)
+      ) {
         setActiveQuery(null);
       }
     };
@@ -132,7 +115,6 @@ export default function MentionInput({
   }, []);
 
   const handleSubmit = () => {
-    // Stored/emitted payload: usernames only, not display names.
     const data: MentionData = {
       text: value,
       mentions: selectedUsers.map((u) => u.username),
@@ -143,11 +125,12 @@ export default function MentionInput({
 
   return (
     <div ref={wrapperRef} className="relative w-full max-w-md">
-      {/* input + notched floating label (fieldset/legend breaks the border itself) */}
       <div className="relative">
         <fieldset
           className={`m-0 min-w-0 rounded-lg border px-3 pb-2 pt-0 transition-colors ${
-            focused ? "border-indigo-500 ring-1 ring-indigo-500" : "border-neutral-300"
+            focused
+              ? "border-indigo-500 ring-1 ring-indigo-500"
+              : "border-neutral-300"
           }`}
         >
           <legend
@@ -170,8 +153,6 @@ export default function MentionInput({
           />
         </fieldset>
 
-        {/* Large centered label shown only while empty and unfocused —
-            swaps out for the notch above once the field is active/filled. */}
         {!isFloating && (
           <label
             htmlFor="mention-input"

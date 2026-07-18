@@ -6,20 +6,20 @@ export interface MentionUser {
   username: string;
 }
 
-/** What actually gets stored/persisted per selected mention. */
+
 export interface SelectedMention {
   username: string;
   name: string;
 }
 
-/** Range of the "@query" currently being typed, if any. */
+
 export interface ActiveQuery {
   text: string;
   start: number;
   end: number;
 }
 
-/** Payload emitted on submit / onChange. */
+
 export interface MentionData {
   text: string;
   mentions: string[];
@@ -30,18 +30,7 @@ interface MentionDropdownProps {
   onSelect: (user: MentionUser) => void;
 }
 
-/**
- * -----------------------------------------------------------------------
- * MentionDropdown
- * Purely presentational. Takes a user list, renders it as an absolute
- * positioned div, and reports the selected user back via onSelect.
- * The parent MUST be `position: relative` for the absolute positioning
- * to anchor correctly.
- *
- * `name` is shown to the person picking a mention; `username` is the
- * value that actually gets stored/inserted.
- * -----------------------------------------------------------------------
- */
+
 export default function MentionDropdown({ users, onSelect }: MentionDropdownProps) {
   if (!users.length) {
     return (
